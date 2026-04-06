@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    color: #e0f7ff;
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .poster {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 30px 24px;
+    position: relative;
+  }
+
+  .poster::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridPulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .poster > * { position: relative; z-index: 1; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0,200,255,0.3);
+  }
+
+  .subtitle-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #00c8ff;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .main-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #ffffff 0%, #00c8ff 50%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+
+  .header-desc {
+    font-size: 14px;
+    color: rgba(200,240,255,0.6);
+    font-weight: 300;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .orbit-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    position: relative;
+  }
+
+  .nucleus {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #00c8ff, #0044cc);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px rgba(0,200,255,0.8);
+  }
+
+  .orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .orbit-ring-1 {
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+  }
+
+  .orbit-ring-2 {
+    width: 72px;
+    height: 72px;
+    animation: spin 3.5s linear infinite reverse;
+    border-color: rgba(100,150,255,0.25);
+  }
+
+  .electron {
+    width: 6px;
+    height: 6px;
+    background: #00c8ff;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px #00c8ff;
+  }
+
+  .electron-2 {
+    background: #6699ff;
+    box-shadow: 0 0 8px #6699ff;
+    top: auto;
+    bottom: -3px;
+  }
+
+  @keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Intro blurb */
+  .intro-blurb {
+    background: rgba(0,20,50,0.7);
+    border: 1px solid rgba(0,200,255,0.15);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+    font-size: 13px;
+    color: rgba(200,240,255,0.75);
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.7s;
+  }
+
+  .intro-blurb strong {
+    color: #00c8ff;
+  }
+
+  /* Qubit section */
+  .qubit-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.8s;
+  }
+
+  .qubit-box {
+    background: rgba(0,30,60,0.8);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .qubit-box::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0,200,255,0.05) 0%, transparent 60%);
+    animation: rotate 8s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .bit-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(0,200,255,0.7);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .bit-display {
+    font-family: 'Orbitron', monospace;
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .classical .bit-display { color: #ffffff; }
+
+  .quantum .bit-display {
+    background: linear-gradient(135deg, #00c8ff, #0066ff, #00c8ff);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 2s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .bit-desc {
+    font-size: 12px;
+    color: rgba(200,240,255,0.55);
+    line-height: 1.55;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #00c8ff;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,200,255,0.4), transparent);
+  }
+
+  /* Three principles */
+  .principles {
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1s;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .principle-card {
+    background: rgba(0,20,50,0.9);
+    border: 1px solid rgba(0,200,255,0.15);
+    border-radius: 10px;
+    padding: 18px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .principle-card:hover { border-color: rgba(0,200,255,0.5); }
+
+  .principle-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00c8ff, #0066ff);
+  }
+
+  .p-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+
+  .p-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #00c8ff;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .p-desc {
+    font-size: 12px;
+    color: rgba(200,240,255,0.65);
+    line-height: 1.55;
+  }
+
+  /* How it works */
+  .how-it-works {
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1.2s;
+  }
+
+  .steps {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .step {
+    flex: 1;
+    background: rgba(0,20,50,0.8);
+    border: 1px solid rgba(0,200,255,0.15);
+    padding: 16px 14px;
+    text-align: center;
+  }
+
+  .step:first-child { border-radius: 10px 0 0 10px; }
+  .step:last-child { border-radius: 0 10px 10px 0; }
+
+  .step-arrow {
+    display: flex;
+    align-items: center;
+    color: rgba(0,200,255,0.4);
+    font-size: 20px;
+    padding: 0 2px;
+    flex-shrink: 0;
+  }
+
+  .step-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(0,200,255,0.5);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .step-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .step-text {
+    font-size: 11px;
+    color: rgba(200,240,255,0.55);
+    line-height: 1.4;
+  }
+
+  /* Applications + facts */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1.4s;
+  }
+
+  .applications {
+    background: rgba(0,20,50,0.8);
+    border: 1px solid rgba(0,200,255,0.15);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .app-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,200,255,0.08);
+  }
+
+  .app-item:last-child { border-bottom: none; }
+  .app-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+
+  .app-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #00c8ff;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .app-text {
+    font-size: 11px;
+    color: rgba(200,240,255,0.6);
+    line-height: 1.4;
+  }
+
+  .facts-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fact-card {
+    background: rgba(0,20,50,0.8);
+    border: 1px solid rgba(0,200,255,0.15);
+    border-radius: 10px;
+    padding: 16px;
+    flex: 1;
+  }
+
+  .fact-number {
+    font-family: 'Orbitron', monospace;
+    font-size: 26px;
+    font-weight: 900;
+    color: #00c8ff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .fact-label {
+    font-size: 11px;
+    color: rgba(200,240,255,0.55);
+    line-height: 1.4;
+  }
+
+  /* Challenges */
+  .challenge-bar {
+    background: linear-gradient(135deg, rgba(0,40,80,0.9), rgba(0,20,50,0.9));
+    border: 1px solid rgba(0,200,255,0.25);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1.6s;
+  }
+
+  .challenges-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .challenge-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(200,240,255,0.65);
+    line-height: 1.4;
+  }
+
+  .challenge-item span:first-child {
+    color: #ff4466;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* My thoughts */
+  .my-thoughts {
+    background: rgba(0,30,60,0.6);
+    border-left: 3px solid #00c8ff;
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 1.75s;
+  }
+
+  .thoughts-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #00c8ff;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .thoughts-text {
+    font-size: 12.5px;
+    color: rgba(200,240,255,0.7);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0,200,255,0.1);
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 1.9s;
+  }
+
+  .footer-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #00c8ff;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .footer-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(0,200,255,0.35);
+  }
+
+  @media (max-width: 600px) {
+    .principles-grid { grid-template-columns: 1fr; }
+    .qubit-section { grid-template-columns: 1fr; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .challenges-list { grid-template-columns: 1fr; }
+    .steps { flex-direction: column; }
+    .step:first-child { border-radius: 10px 10px 0 0; }
+    .step:last-child { border-radius: 0 0 10px 10px; }
+    .step-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="orbit-container">
+      <div class="nucleus"></div>
+      <div class="orbit-ring orbit-ring-1"><div class="electron"></div></div>
+      <div class="orbit-ring orbit-ring-2"><div class="electron electron-2"></div></div>
+    </div>
+    <div class="subtitle-tag">Computer Science Technologies &nbsp;|&nbsp; Future Computing</div>
+    <div class="main-title">QUANTUM COMPUTING</div>
+    <div class="header-desc">The next leap beyond the limits of classical processors</div>
+  </div>
+
+  <!-- Intro blurb -->
+  <div class="intro-blurb">
+    Normal computers have a problem: there is a physical limit to how powerful a single processor can get. Wires can only get so thin, and electricity can only travel so fast. That is why scientists are looking beyond silicon entirely. <strong>Quantum computing</strong> uses the strange laws of quantum physics to process information in a completely different way, and it could be one of the biggest breakthroughs in the history of technology.
+  </div>
+
+  <!-- Classical vs Quantum -->
+  <div class="qubit-section">
+    <div class="qubit-box classical">
+      <div class="bit-label">Classical Bit</div>
+      <div class="bit-display">0 or 1</div>
+      <div class="bit-desc">A normal computer bit is either on or off, nothing in between. Every device you own runs on billions of these simple switches flipping back and forth incredibly fast.</div>
+    </div>
+    <div class="qubit-box quantum">
+      <div class="bit-label">Quantum Qubit</div>
+      <div class="bit-display">0 + 1</div>
+      <div class="bit-desc">A qubit can be both 0 and 1 at the same time. Just 8 qubits can represent all 256 possible values at once, rather than just one at a time like a normal computer.</div>
+    </div>
+  </div>
+
+  <!-- Three principles -->
+  <div class="principles">
+    <div class="section-title">Three Key Principles</div>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <span class="p-icon">🌀</span>
+        <div class="p-name">Superposition</div>
+        <div class="p-desc">Qubits exist in multiple states at once. Think of it like a coin spinning in the air before it lands. This lets quantum computers look at many possible answers at the same time.</div>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">🔗</span>
+        <div class="p-name">Entanglement</div>
+        <div class="p-desc">Two qubits can be linked so that what happens to one instantly affects the other, no matter how far apart they are. Einstein called this "spooky action at a distance."</div>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">〰️</span>
+        <div class="p-name">Interference</div>
+        <div class="p-desc">Quantum algorithms use wave patterns to boost the right answers and cancel out the wrong ones, steering the computer towards the correct solution much faster.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-it-works">
+    <div class="section-title">How It Works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-name">Freeze It</div>
+        <div class="step-text">Qubits are cooled to near absolute zero, colder than outer space, to hold their quantum state</div>
+      </div>
+      <div class="step-arrow">›</div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-name">Superpose</div>
+        <div class="step-text">Qubits enter superposition, exploring all possible states at once rather than one at a time</div>
+      </div>
+      <div class="step-arrow">›</div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-name">Entangle</div>
+        <div class="step-text">Qubits are linked together so their states are connected, enabling far more complex calculations</div>
+      </div>
+      <div class="step-arrow">›</div>
+      <div class="step">
+        <div class="step-num">STEP 04</div>
+        <div class="step-name">Measure</div>
+        <div class="step-text">The quantum state collapses into a normal result and the answer is extracted from the computation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applications + Facts -->
+  <div class="bottom-grid">
+    <div class="applications">
+      <div class="section-title">Real World Uses</div>
+      <div class="app-item">
+        <span class="app-icon">💊</span>
+        <div>
+          <div class="app-name">Drug Discovery</div>
+          <div class="app-text">Simulating how molecules behave could help scientists find cures for diseases like Alzheimer's and cancer far faster than today</div>
+        </div>
+      </div>
+      <div class="app-item">
+        <span class="app-icon">🔐</span>
+        <div>
+          <div class="app-name">Cryptography</div>
+          <div class="app-text">Quantum computers could break today's internet encryption, but also create completely unbreakable quantum-secured communication</div>
+        </div>
+      </div>
+      <div class="app-item">
+        <span class="app-icon">🧠</span>
+        <div>
+          <div class="app-name">AI and Machine Learning</div>
+          <div class="app-text">Processing huge, complex datasets much faster could make AI systems dramatically more powerful and accurate</div>
+        </div>
+      </div>
+      <div class="app-item">
+        <span class="app-icon">📦</span>
+        <div>
+          <div class="app-name">Optimisation</div>
+          <div class="app-text">Solving huge logistics problems, like the most efficient route for thousands of delivery drivers, in seconds rather than days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="facts-panel">
+      <div class="fact-card">
+        <div class="fact-number">460°F</div>
+        <div class="fact-label">Below zero. That is how cold qubits need to be kept, making them colder than anywhere in outer space</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-number">IBM 2026</div>
+        <div class="fact-label">IBM expects to prove quantum computers can outperform classical ones for a real world task by late 2026</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-number">1,000x+</div>
+        <div class="fact-label">The potential speed advantage over the world's most powerful supercomputers for certain calculations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Challenges -->
+  <div class="challenge-bar">
+    <div class="section-title">Current Challenges</div>
+    <div class="challenges-list">
+      <div class="challenge-item">
+        <span>⚠</span>
+        <div><strong style="color:#ff8899">Decoherence</strong> Qubits are incredibly fragile. Even tiny vibrations or heat cause them to lose their quantum state and stop working</div>
+      </div>
+      <div class="challenge-item">
+        <span>⚠</span>
+        <div><strong style="color:#ff8899">Error Rates</strong> Today's quantum computers make lots of mistakes and need complicated error correction just to stay reliable</div>
+      </div>
+      <div class="challenge-item">
+        <span>⚠</span>
+        <div><strong style="color:#ff8899">Scaling Up</strong> Useful applications need thousands of stable qubits, but current machines have fewer than 100 that work reliably</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Personal reflection -->
+  <div class="my-thoughts">
+    <div class="thoughts-label">My Take on This</div>
+    <div class="thoughts-text">
+      What I find genuinely mind-blowing about quantum computing is not just the speed, it is the whole idea that a particle can be in two places at once. That does not make sense by normal logic, and yet that is exactly what makes it so powerful. I think the biggest challenge is not the technology itself, it is the fact that most people have no idea it even exists. If quantum computers do eventually break current encryption, that affects every single person with a phone or a bank account. It is the kind of technology that could change everything quietly, and I think that is worth paying attention to.
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-name">MITHIL KATKORIA</div>
+    <div class="footer-sub">QUANTUM COMPUTING RESEARCH POSTER &nbsp;|&nbsp; YEAR 11</div>
+  </div>
+
+</div>
+</body>
+</html>
